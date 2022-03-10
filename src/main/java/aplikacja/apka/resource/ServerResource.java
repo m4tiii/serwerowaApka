@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Map.of;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
@@ -41,7 +42,7 @@ public class ServerResource {
     }
 
     @GetMapping("/ping/{ipAddress}")
-    public ResponseEntity<Response> pingServer(@PathVariable("idAddress") String ipAddress) throws IOException {
+    public ResponseEntity<Response> pingServer(@PathVariable("ipAddress") String ipAddress) throws IOException {
         Server server = serviceImplementation.ping(ipAddress);
         return ResponseEntity.ok(
                 Response.builder()
@@ -55,14 +56,14 @@ public class ServerResource {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Response> saveServer(@RequestBody @Valid Server server) throws IOException {
+    public ResponseEntity<Response> saveServer(@RequestBody @Valid Server server){
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
                         .data(of("servers", serviceImplementation.create(server)))
                         .message("Server created")
-                        .status(OK)
-                        .statusCode(OK.value())
+                        .status(CREATED)
+                        .statusCode(CREATED.value())
                         .build()
         );
     }
